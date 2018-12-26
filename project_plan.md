@@ -22,6 +22,18 @@ class CoordinateSystem {
 }
 
 class Object {
+  faces: Face[]
+}
+
+class Cube {
+
+}
+
+class Tetrahedron {
+
+}
+
+class Face {
   points: Point3D[]
 }
 
@@ -32,17 +44,19 @@ class Camera {
 class World {
   objects: Object[]
   cams: Camera[]
-  + drawScene(p: Panel)
+  + drawScene(w: Window, c: Context)
 }
 
 class Panel {
   drawArea: Window
-  cr: Context
 }
 
 CoordinateSystem <|-- Camera
 CoordinateSystem <|-- Object
-Object *-- Point3D
+Object <|-- Cube
+Object <|-- Tetrahedron
+Object *-- Face
+Face *-- Point3D
 World o-- Object
 World o-- Camera
 
