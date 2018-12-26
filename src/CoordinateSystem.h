@@ -2,7 +2,6 @@
 #define COORDINATESYSTEM_H
 #include "Point.h"
 #include <Eigen/Dense>
-#include <iostream>
 
 using Eigen::Matrix4d;
 using Eigen::Matrix3d;
@@ -19,27 +18,23 @@ public:
 
   CoordinateSystem(const Matrix4d &m) : affine{m} {}
 
-  Matrix4d get() {
-    return affine;
-  }
-
   Point3D transformIntoSystem(const Point3D &p, const CoordinateSystem &other) const {
-    Point3D ret = p.transpose() * (other.affine * affine.inverse());
+    Point3D ret = affine.inverse() * other.affine * p;
     return ret;
   }
 
   void rotate(Quaterniond q) {
     Matrix4d m;
-    m << q.toRotationMatrix(), Vector3d(0,0,0), 0,0,0,1;
+    m << q.toRotationMatrix(),Vector3d(0,0,0),0,0,0,1;
 
-    affine *= m;
+    affine = affine * m;
   }
 
   void rotate(Matrix3d m) {
     Matrix4d trans;
-    trans << m, Vector3d(0,0,0),0,0,0,1;
+    trans << m,Vector3d(0,0,0),0,0,0,1;
 
-    affine *= trans;
+    affine = affine * trans;
   }
 
   void rotateX(double x) {
@@ -55,7 +50,7 @@ public:
   }
 
   void translate(Vector3d trans) {
-    affine.block<1,3>(3,0) += trans;
+    affine.block<3,1>(0,3) += trans;
   }
 
 };
