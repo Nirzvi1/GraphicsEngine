@@ -2,8 +2,72 @@
 #include "Object.h"
 #include "Point.h"
 #include "Panel.h"
+#include "polyhedrons/Tetrahedron.h"
 #include <cairo.h>
 #include <gtk/gtk.h>
+
+static gboolean clicked(GtkWidget *widget, GdkEventKey *event, gpointer user_data) {
+
+    if (event->keyval == GDK_KEY_a){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(-10, 0, 0));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_d){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(10, 0, 0));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_w){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(0, -10, 0));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_s){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(0, 10, 0));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_f){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(0, 0, -0.5));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_b){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].translate(Vector3d(0, 0, 0.5));
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_e){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].rotateX(0.01);
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    } else if (event->keyval == GDK_KEY_q){
+        World *w = static_cast<World *>(user_data);
+        w->getCameras()[0].rotateX(-0.01);
+
+        gtk_widget_queue_draw(widget);
+
+        return TRUE;
+    }
+
+    return FALSE;
+}
 
 int main(int argc, char *argv[])
 {
@@ -18,41 +82,23 @@ int main(int argc, char *argv[])
 
   World w;
 
-  Object o;
-  o.getPoints().push_back(Point3D(100, 100, 10, 1));
-  o.getPoints().push_back(Point3D(-100, 100, 10, 1));
-  o.getPoints().push_back(Point3D(-100, -100, 10, 1));
-  o.getPoints().push_back(Point3D(100, -100, 10, 1));
-
-  Object o2;
-  o2.getPoints().push_back(Point3D(100, 100, 20, 1));
-  o2.getPoints().push_back(Point3D(-100, 100, 20, 1));
-  o2.getPoints().push_back(Point3D(-100, -100, 20, 1));
-  o2.getPoints().push_back(Point3D(100, -100, 20, 1));
-
-    Object o3;
-    o3.getPoints().push_back(Point3D(100, 100, 10, 1));
-    o3.getPoints().push_back(Point3D(100, -100, 10, 1));
-    o3.getPoints().push_back(Point3D(100, -100, 20, 1));
-    o3.getPoints().push_back(Point3D(100, 100, 20, 1));
-
-  w.getObjects().push_back(o);
-  w.getObjects().push_back(o2);
-  w.getObjects().push_back(o3);
+  Tetrahedron c(5);
+  c.translate(Vector3d(0,0,-10));
+  w.getObjects().push_back(c);
 
   w.getCameras().push_back(Camera());
-  w.getCameras()[0].translate(Vector3d(0, 0, 0));
+  // w.getCameras()[0].translate(Vector3d(-100, 0, 0));
 
   Panel p(window, w);
 
   g_signal_connect(window, "destroy",
       G_CALLBACK(gtk_main_quit), NULL);
 
-  // g_signal_connect(window, "button-press-event",
-  //     G_CALLBACK(clicked), &p);
+  g_signal_connect(window, "key_press_event",
+      G_CALLBACK(clicked), &w);
 
   gtk_window_set_position(GTK_WINDOW(window), GTK_WIN_POS_CENTER);
-  gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+  gtk_window_set_default_size(GTK_WINDOW(window), 1000, 650);
   gtk_window_set_title(GTK_WINDOW(window), "Lines");
 
   gtk_widget_show_all(window);
