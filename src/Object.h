@@ -3,16 +3,28 @@
 
 #include "CoordinateSystem.h"
 #include "Point.h"
+#include "Face.h"
 #include <vector>
+#include <Eigen/Dense>
 
+using Eigen::Vector3d;
 using std::vector;
 
 class Object : public CoordinateSystem {
-  vector<Point3D> points;
+  vector<Face> faces;
 
 public:
+  Object() : CoordinateSystem{} {}
+  Object(const Matrix4d &m) : CoordinateSystem{m} {}
+  Object(Vector3d origin, Vector3d orientation) : CoordinateSystem{} {
+    translate(origin);
+    rotateX(orientation[0]);
+    rotateY(orientation[1]);
+    rotateZ(orientation[2]);
+  }
 
-  vector<Point3D> &getPoints() { return points; }
+  void setFaces(const vector<Face> &f) { faces = f; }
+  const vector<Face> &getFaces() { return faces; }
 
 };
 
