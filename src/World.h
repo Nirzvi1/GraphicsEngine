@@ -5,7 +5,6 @@
 #include "Object.h"
 #include <cairo.h>
 #include <gtk/gtk.h>
-#include <iostream>
 #include <vector>
 
 class World {
@@ -19,7 +18,6 @@ public:
     const Camera &c = cameras[0];
     CoordinateSystem identity;
 
-
     cairo_set_source_rgb(cr, 0, 0, 0);
     cairo_set_line_width(cr, 0.5);
 
@@ -27,19 +25,19 @@ public:
     int h = gtk_widget_get_allocated_height(widget);
 
     for (auto o : objects) {
-      Point2D start = c.transformAndPerspective(o.getPoints()[0], identity);
+      for (auto f : o.getFaces()) {
+        Point2D start = c.transformAndPerspective(f[0], o);
+        size_t sc = c.canvasWidth;
 
+        cairo_move_to(cr, start[0] * sc * w - (sc-1) * w / 2, (1 - start[1]) * sc * h - (sc-1) * h / 2);
+        for (size_t i = 1; i < f.size(); ++i) {
+          Point2D px = c.transformAndPerspective(f[i], o);
+          if (px[0] != -1 && px[1] != -1)
+            cairo_line_to(cr, px[0] * sc * w - (sc-1) * w / 2, (1 - px[1]) * sc * h - (sc-1) * h / 2);
+        }
 
-      cairo_move_to(cr, start[0] + w / 2, start[1] + h / 2);
-
-      for (auto p : o.getPoints()) {
-        Point2D px = c.transformAndPerspective(p, identity);
-        std::cout << px[0] << "; " << px[1] << std::endl;
-
-        cairo_line_to(cr, px[0] + w / 2, px[1] + h / 2);
+        cairo_close_path(cr);
       }
-
-      cairo_close_path(cr);
     }
 
     cairo_stroke(cr);
