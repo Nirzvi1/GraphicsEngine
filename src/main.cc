@@ -70,10 +70,23 @@ static gboolean clicked(GtkWidget *widget, GdkEventKey *event, gpointer user_dat
     return FALSE;
 }
 
+static gboolean on_draw_event(GtkWidget *widget, cairo_t *cr, gpointer user_data) {
+  World *w = static_cast<World *>(user_data);
+  w->draw(widget, cr);
+
+  return FALSE;
+}
+
+void addDrawingArea(GtkWidget* window, World &world) {
+  GtkWidget *darea = gtk_drawing_area_new();
+
+  gtk_container_add(GTK_CONTAINER(window), darea);
+  g_signal_connect(G_OBJECT(darea), "draw", G_CALLBACK(on_draw_event), &world);
+}
+
 int main(int argc, char *argv[])
 {
   GtkWidget *window;
-  GtkWidget *darea;
 
   gtk_init(&argc, &argv);
 
@@ -97,6 +110,7 @@ int main(int argc, char *argv[])
   w.getObjects().push_back(o);
   w.getCameras().push_back(Camera(1.54, 1));
 
+  addDrawingArea(window, w);
 
   g_signal_connect(window, "destroy",
       G_CALLBACK(gtk_main_quit), NULL);
