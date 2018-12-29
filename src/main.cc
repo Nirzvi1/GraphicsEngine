@@ -1,7 +1,7 @@
 #include "World.h"
 #include "Object.h"
-#include "Point.h"
-#include "Panel.h"
+#include "Camera.h"
+#include "Point3D.h"
 #include "polyhedrons/Cube.h"
 #include "polyhedrons/Tetrahedron.h"
 #include <cairo.h>
@@ -81,12 +81,9 @@ int main(int argc, char *argv[])
 
   gtk_widget_add_events(window, GDK_BUTTON_PRESS_MASK);
 
-  World w;
-
   Object o;
-  vector<Face> f = {Face{Point3D(10, 10, 5),Point3D(-10, 10, 5),Point3D(-10, -10, 5),Point3D(10, -10, 5)},
+  o.faces = {Face{Point3D(10, 10, 5),Point3D(-10, 10, 5),Point3D(-10, -10, 5),Point3D(10, -10, 5)},
                     Face{Point3D(20, 20, -5),Point3D(0, 20, -5),Point3D(0, 0, -5),Point3D(20, 0, -5)}};
-  o.setFaces(f);
   // Cube o(10);
   // o.getFaces()[0].setColour(Eigen::Vector3f(0.5, 0, 0));
   // o.getFaces()[1].setColour(Eigen::Vector3f(0, 0.5, 0));
@@ -94,14 +91,12 @@ int main(int argc, char *argv[])
   // o.getFaces()[3].setColour(Eigen::Vector3f(0, 0.5, 0.5));
   // o.getFaces()[4].setColour(Eigen::Vector3f(0.5, 0, 0.5));
   // o.getFaces()[5].setColour(Eigen::Vector3f(0.5, 0.5, 0));
-
   o.translate(Vector3d(0,0,-30));
+
+  World w;
   w.getObjects().push_back(o);
-
   w.getCameras().push_back(Camera(1.54, 1));
-  // w.getCameras()[0].translate(Vector3d(-100, 0, 0));
 
-  Panel p(window, w);
 
   g_signal_connect(window, "destroy",
       G_CALLBACK(gtk_main_quit), NULL);
