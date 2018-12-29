@@ -1,17 +1,14 @@
 #ifndef WORLD_H
 #define WORLD_H
 
-#include "Camera.h"
-#include "Object.h"
-#include "Face.h"
-#include "Shape.h"
 #include <cairo.h>
 #include <gtk/gtk.h>
 #include <vector>
-#include <iostream>
 
 using std::vector;
 
+struct Object;
+class Camera;
 
 class World {
 
