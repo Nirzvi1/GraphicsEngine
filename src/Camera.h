@@ -2,8 +2,8 @@
 #define CAMERA_H
 
 #include "CoordinateSystem.h"
-#include "Point.h"
-#include <iostream>
+#include "Point3D.h"
+#include "Pixel.h"
 
 class Camera : public CoordinateSystem {
 
@@ -23,8 +23,12 @@ public:
     return Pixel((px[0] + canvasWidth / 2) / canvasWidth, (px[1] + canvasHeight / 2) / canvasHeight, std::sqrt(p[0]*p[0] + p[1]*p[1] + p[2]*p[2]));
   }
 
-  bool outOfView(Pixel p) const {
+  static bool outOfView(Pixel p) {
     return (p[0] < 0 || p[0] > 1 || p[1] < 0 || p[1] > 1);
+  }
+
+  bool outOfView(Point3D p) const {
+    return (std::abs(p[0]) > canvasWidth / 2 || std::abs(p[1]) > canvasHeight / 2 || p[2] > 0);
   }
 
 };
