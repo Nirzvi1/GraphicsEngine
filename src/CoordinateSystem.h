@@ -19,7 +19,7 @@ public:
   CoordinateSystem(const Matrix4d &m) : affine{m} {}
 
   Point3D transformIntoSystem(const Point3D &p, const CoordinateSystem &other) const {
-    Point3D ret = affine.inverse() * other.affine * p;
+    Point3D ret(affine.inverse() * other.affine * p);
     return ret;
   }
 

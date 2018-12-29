@@ -24,7 +24,7 @@ public:
   }
 
   void setFaces(const vector<Face> &f) { faces = f; }
-  const vector<Face> &getFaces() { return faces; }
+  vector<Face> &getFaces() { return faces; }
 
 };
 

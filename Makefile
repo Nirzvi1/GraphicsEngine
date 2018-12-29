@@ -1,5 +1,5 @@
 CXX = g++
-CXXFLAGS = -std=c++14 -Wall -MMD -I/usr/local/include/cairo -I/usr/local/include/eigen3 `pkg-config gtk+-3.0 --cflags` `pkg-config --cflags cairo`
+CXXFLAGS = -std=c++14 -Wall -MMD -I/usr/local/include/cairo -I/usr/local/include/eigen3 -I/usr/local/include/boost `pkg-config gtk+-3.0 --cflags` `pkg-config --cflags cairo`
 LDFLAGS = -L/usr/local/lib/ `pkg-config gtk+-3.0 --libs` `pkg-config --libs cairo`
 EXEC = draw
 FILES = $(wildcard ./src/*.cc)

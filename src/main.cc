@@ -2,6 +2,7 @@
 #include "Object.h"
 #include "Point.h"
 #include "Panel.h"
+#include "polyhedrons/Cube.h"
 #include "polyhedrons/Tetrahedron.h"
 #include <cairo.h>
 #include <gtk/gtk.h>
@@ -10,28 +11,28 @@ static gboolean clicked(GtkWidget *widget, GdkEventKey *event, gpointer user_dat
 
     if (event->keyval == GDK_KEY_a){
         World *w = static_cast<World *>(user_data);
-        w->getCameras()[0].translate(Vector3d(-10, 0, 0));
+        w->getCameras()[0].translate(Vector3d(-2, 0, 0));
 
         gtk_widget_queue_draw(widget);
 
         return TRUE;
     } else if (event->keyval == GDK_KEY_d){
         World *w = static_cast<World *>(user_data);
-        w->getCameras()[0].translate(Vector3d(10, 0, 0));
+        w->getCameras()[0].translate(Vector3d(2, 0, 0));
 
         gtk_widget_queue_draw(widget);
 
         return TRUE;
     } else if (event->keyval == GDK_KEY_w){
         World *w = static_cast<World *>(user_data);
-        w->getCameras()[0].translate(Vector3d(0, -10, 0));
+        w->getCameras()[0].translate(Vector3d(0, -2, 0));
 
         gtk_widget_queue_draw(widget);
 
         return TRUE;
     } else if (event->keyval == GDK_KEY_s){
         World *w = static_cast<World *>(user_data);
-        w->getCameras()[0].translate(Vector3d(0, 10, 0));
+        w->getCameras()[0].translate(Vector3d(0, 2, 0));
 
         gtk_widget_queue_draw(widget);
 
@@ -82,11 +83,22 @@ int main(int argc, char *argv[])
 
   World w;
 
-  Tetrahedron c(5);
-  c.translate(Vector3d(0,0,-10));
-  w.getObjects().push_back(c);
+  Object o;
+  vector<Face> f = {Face{Point3D(10, 10, 5),Point3D(-10, 10, 5),Point3D(-10, -10, 5),Point3D(10, -10, 5)},
+                    Face{Point3D(20, 20, -5),Point3D(0, 20, -5),Point3D(0, 0, -5),Point3D(20, 0, -5)}};
+  o.setFaces(f);
+  // Cube o(10);
+  // o.getFaces()[0].setColour(Eigen::Vector3f(0.5, 0, 0));
+  // o.getFaces()[1].setColour(Eigen::Vector3f(0, 0.5, 0));
+  // o.getFaces()[2].setColour(Eigen::Vector3f(0, 0, 0.5));
+  // o.getFaces()[3].setColour(Eigen::Vector3f(0, 0.5, 0.5));
+  // o.getFaces()[4].setColour(Eigen::Vector3f(0.5, 0, 0.5));
+  // o.getFaces()[5].setColour(Eigen::Vector3f(0.5, 0.5, 0));
 
-  w.getCameras().push_back(Camera());
+  o.translate(Vector3d(0,0,-30));
+  w.getObjects().push_back(o);
+
+  w.getCameras().push_back(Camera(1.54, 1));
   // w.getCameras()[0].translate(Vector3d(-100, 0, 0));
 
   Panel p(window, w);
