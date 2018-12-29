@@ -5,9 +5,10 @@ class Point3D {
   z: double
 }
 
-class Point2D {
+class Pixel {
   x: double
   y: double
+  dist: double
 }
 
 class CoordinateSystem {
@@ -18,7 +19,6 @@ class CoordinateSystem {
   + rotateX(x: Angle)
   + rotateY(y: Angle)
   + rotateZ(z: Angle)
-  +<u>identity()
 }
 
 class Object {
@@ -37,27 +37,31 @@ class Face {
   points: Point3D[]
 }
 
+class Shape {
+  pxs: Pixel[]
+  + clip(other: Shape): Shape[]
+}
+
 class Camera {
-  + perspective(p: Point3D): Point2D
+  + transformAndPerspective(p: Point3D): Pixel
+  + perspective(p: Point3D): Pixel
+  + outOfView(p: Pixel): Boolean
+  + outOfView(p: Point3D): Boolean
 }
 
 class World {
   objects: Object[]
   cams: Camera[]
-  + drawScene(w: Window, c: Context)
-}
-
-class Panel {
-  drawArea: Window
+  + draw(w: Window, c: Context)
 }
 
 CoordinateSystem <|-- Camera
 CoordinateSystem <|-- Object
 Object <|-- Cube
 Object <|-- Tetrahedron
-Object *-- Face
+Object *- Face
 Face *-- Point3D
-World o-- Object
-World o-- Camera
-
+World *-- Object
+World *-- Camera
+Shape *-- Pixel
 ```
